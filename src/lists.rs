@@ -1,4 +1,5 @@
 use crate::*;
+use serde_derive::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 struct GroceryList {
@@ -11,4 +12,5 @@ struct GroceryList {
 struct GroceryListItem {
     name: String,
     quantity: Option<u64>,
+    crossed_off: bool,
 }

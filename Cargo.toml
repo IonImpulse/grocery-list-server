@@ -7,6 +7,14 @@ edition = "2021"
 
 [dependencies]
 serde = "*"
+serde_derive = "*"
 serde_json = "*"
-actix-web = "*"
 lazy_static = "*"
+actix-web = { version = "4.0.1", features = ["openssl"] }
+actix-cors = "0.6.0-beta.2"
+chrono = { version = "*", features = ["serde"] }
+futures = "*"
+env_logger = "*"
+log = "*"
+tokio = { version = "*", features = ["full"] }
+openssl = { version = "0.10", features = ["vendored"] }
