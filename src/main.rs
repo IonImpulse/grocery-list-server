@@ -4,7 +4,10 @@ use serde_derive::{Deserialize, Serialize};
 use lazy_static::lazy_static;
 
 mod lists;
+mod routes;
+
 use lists::*;
+use routes::*;
 
 pub struct MemDatabase {
     lists: GroceryLists,
