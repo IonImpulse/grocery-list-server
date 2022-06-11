@@ -51,7 +51,10 @@ lazy_static! {
         Arc::new(Mutex::new(MemDatabase::new()));
 }
 
+#[cfg(not(debug_assertions))]
 const DB_NAME: &str = "db.json";
+#[cfg(debug_assertions)]
+const DB_NAME: &str = "db.json.debug";
 
 fn from_slice_lenient<'a, T: ::serde::Deserialize<'a>>(
     v: &'a [u8],

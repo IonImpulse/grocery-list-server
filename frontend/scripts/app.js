@@ -61,9 +61,15 @@ async function sync_state() {
         } else {
             console.log('Server state is newer than local state, pulling from server');
             state.list_object = list_object;
+            renderList();
         }
     }
 }
+
+setInterval(() => {
+    sync_state();
+}
+, 5000);
 
 async function push_state() {
     console.log('Pushing state to server');
@@ -149,6 +155,8 @@ function renderList() {
 
     let new_button = generateNewListItemButton();
 
+    let switch_button = generateSwitchButton();
+
     while (list_container.firstChild) {
         list_container.removeChild(list_container.firstChild);
     }
@@ -160,6 +168,7 @@ function renderList() {
     }
 
     list_container.appendChild(new_button);
+    list_container.appendChild(switch_button);
 
     console.timeEnd('renderList');
 }
@@ -181,6 +190,22 @@ function generateListHeader() {
     return header;
 }
 
+function generateSwitchButton() {
+    let button = document.createElement('button');
+    button.innerText = 'Switch Lists';
+    button.id = "switch-button";
+    button.addEventListener('click', () => {
+        clearData()
+    });
+
+    return button;
+}
+
+function clearData() {
+    state.list_object = null;
+    localStorage.removeItem('state');
+    setDisplay('load'); 
+}
 
 function createListItem(list_item) {
     let item = document.createElement('div');
