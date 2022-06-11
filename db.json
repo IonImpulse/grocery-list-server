@@ -16,32 +16,28 @@
             "uuid": "657177f4-2752-4c0e-8408-0b615b258468",
             "name": "chocolate",
             "quantity": "21 lb",
-            "crossed_off": false
+            "crossed_off": true
           },
           {
             "uuid": "9a13f648-2f0c-4bf0-9e2c-7aeb25a1d22f",
             "name": "",
             "quantity": "",
             "crossed_off": false
-          }
-        ],
-        "last_updated": 1654973117198
-      },
-      {
-        "uuid": "b6d09fe9-7830-49ff-8bed-2a7198520499",
-        "share_code": "9HYEGFT",
-        "name": "afds",
-        "items": [],
-        "last_updated": 1654929756324
-      }
-    ]
-  }
-}ame": "",
+          },
+          {
+            "uuid": "7f599d1d-3ed1-4a98-80b1-cbf85f00b0c2",
+            "name": "d",
+            "quantity": "",
+            "crossed_off": false
+          },
+          {
+            "uuid": "a43b29c5-168f-4266-b2a9-32890da3e4fd",
+            "name": "",
             "quantity": "",
             "crossed_off": false
           }
         ],
-        "last_updated": 1654973115698
+        "last_updated": 1654981164969
       },
       {
         "uuid": "b6d09fe9-7830-49ff-8bed-2a7198520499",

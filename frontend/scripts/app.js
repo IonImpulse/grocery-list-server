@@ -169,20 +169,14 @@ function generateListHeader() {
     header.classList.add('list-item');
     header.classList.add('list-header');
 
-    header.innerHTML = `
-        <div class="list-item-checked">
-            <span>Checked</span>
-        </div>
-        <div class="list-item-name">
-            <span>Name</span>
-        </div>
-        <div class="list-item-quantity">
-            <span>Quantity</span>
-        </div>
-        <div class="list-item-delete">
-            <span>Delete</span>
-        </div>
-    `;
+    const head_text = ["Checked", "Name", "Quantity", "Delete"];
+
+    for (let head of head_text) {
+        let head_el = document.createElement('div');
+        head_el.classList.add('list-item-header');
+        head_el.innerHTML = head;
+        header.appendChild(head_el);
+    }
 
     return header;
 }
