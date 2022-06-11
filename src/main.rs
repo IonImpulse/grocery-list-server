@@ -112,7 +112,7 @@ async fn async_main() -> std::io::Result<()> {
         .unwrap();
     #[cfg(not(debug_assertions))]
     builder
-        .set_certificate_chain_file("/etc/letsencrypt/live/grocerlist.works/fullchain.pem")
+        .set_certificate_chain_file("/etc/letsencrypt/live/grocerylist.works/fullchain.pem")
         .unwrap();
         
     #[cfg(debug_assertions)]
