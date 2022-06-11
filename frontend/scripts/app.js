@@ -126,8 +126,16 @@ function renderList() {
     console.log('Rendering list');
     console.time('renderList');
 
-    document.getElementById("list-name").innerText = state.list_object.name;
-    document.getElementById("share-code").innerText = state.list_object.share_code;
+    const list_name = document.getElementById("list-name");
+
+    list_name.value = state.list_object.name;
+    list_name.addEventListener('change', () => {
+        state.list_object.name = list_name.value;
+        saveState();
+    });
+
+
+    document.getElementById("share-code").innerHTML = `${state.list_object.share_code}`;
 
     const list_container = document.getElementById('list-items');
 
@@ -176,7 +184,7 @@ function generateListHeader() {
         </div>
     `;
 
-    return header;        
+    return header;
 }
 
 
@@ -187,17 +195,23 @@ function createListItem(list_item) {
 
     let check_box = document.createElement('input');
     check_box.type = 'checkbox';
-    check_box.checked = list_item.checked;
-    check_box.addEventListener('change', () => {
-        list_item.checked = check_box.checked;
-        saveState();
-    });
+    check_box.checked = list_item.crossed_off;
 
     let name_input = document.createElement('input');
     name_input.type = 'text';
     name_input.value = list_item.name;
+
+    if (list_item.crossed_off) {
+        name_input.classList.add("strikethrough");
+    }
+
     name_input.addEventListener('change', () => {
         list_item.name = name_input.value;
+        saveState();
+    });
+    check_box.addEventListener('change', () => {
+        list_item.crossed_off = check_box.checked;
+        name_input.classList.toggle("strikethrough");
         saveState();
     });
 
@@ -212,6 +226,7 @@ function createListItem(list_item) {
 
     let delete_button = document.createElement('button');
     delete_button.innerText = 'X';
+    delete_button.classList.add("delete");
     delete_button.addEventListener('click', () => {
         deleteListItem(list_item.uuid);
     });
@@ -227,6 +242,7 @@ function createListItem(list_item) {
 function generateNewListItemButton() {
     let button = document.createElement('button');
     button.innerText = 'Add item';
+    button.id = "new-item-button";
     button.addEventListener('click', () => {
         createNewListItem();
     });
@@ -259,6 +275,17 @@ async function createNewListItem() {
 
     }
 }
+
+function deleteListItem(uuid) {
+    console.log('Deleting list item');
+
+    state.list_object.items = state.list_object.items.filter(item => item.uuid !== uuid);
+
+    saveState();
+
+    renderList();
+}
+
 
 function debounce(func, timeout = 300) {
     let timer;

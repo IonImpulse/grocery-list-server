@@ -118,6 +118,36 @@ h2 {
 }
 
 input[type="checkbox"] {
-    width: max-content;
-    height: max-content;
+    width: 40px;
+    height: 40px;
+}
+
+button.delete {
+    width: 40px;
+    height: auto;
+}
+
+.strikethrough {
+    text-decoration: line-through;
+    font-style: italic;
+}
+
+#list-name {
+    font-size: 40px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    width: 80vw;
+    max-width: 400px;
+}
+
+#share-code {
+    font-size: 2vmin;
+    margin-bottom: 20px;
+}
+
+#new-item-button {
+    width: 80vw;
+    max-width: 400px;
+    height: 40px;
 }

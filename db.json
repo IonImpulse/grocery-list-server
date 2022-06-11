@@ -4,34 +4,44 @@
       {
         "uuid": "e176ed00-b244-4c69-985a-0813a5aabf1d",
         "share_code": "XWRHR69",
-        "name": "test1",
+        "name": "Sontag 107",
         "items": [
           {
             "uuid": "a3b39553-5aee-44a2-9eba-6e1713cd175d",
             "name": "21",
             "quantity": "sadf",
+            "crossed_off": true
+          },
+          {
+            "uuid": "657177f4-2752-4c0e-8408-0b615b258468",
+            "name": "chocolate",
+            "quantity": "21 lb",
             "crossed_off": false
           },
           {
-            "uuid": "a419a253-e27f-4310-bdb8-7b10f3f826d2",
-            "name": "dsaf",
-            "quantity": "12",
-            "crossed_off": false
-          },
-          {
-            "uuid": "ee34f56a-37b4-4878-8ee6-88beff78e286",
+            "uuid": "9a13f648-2f0c-4bf0-9e2c-7aeb25a1d22f",
             "name": "",
-            "quantity": "some",
-            "crossed_off": false
-          },
-          {
-            "uuid": "f40bb736-67df-4d7a-bd41-74839a9c975a",
-            "name": "afsd",
             "quantity": "",
             "crossed_off": false
           }
         ],
-        "last_updated": 1654929957662
+        "last_updated": 1654973117198
+      },
+      {
+        "uuid": "b6d09fe9-7830-49ff-8bed-2a7198520499",
+        "share_code": "9HYEGFT",
+        "name": "afds",
+        "items": [],
+        "last_updated": 1654929756324
+      }
+    ]
+  }
+}ame": "",
+            "quantity": "",
+            "crossed_off": false
+          }
+        ],
+        "last_updated": 1654973115698
       },
       {
         "uuid": "b6d09fe9-7830-49ff-8bed-2a7198520499",
