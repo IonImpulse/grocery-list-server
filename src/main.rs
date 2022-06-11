@@ -1,13 +1,20 @@
-use std::{fs::OpenOptions, io::{Read, Write}, sync::Arc, time::{Duration}, thread, process::exit};
+use std::{
+    fs::OpenOptions,
+    io::{Read, Write},
+    process::exit,
+    sync::Arc,
+    thread,
+    time::Duration,
+};
 
 use actix_cors::*;
-use actix_web::{*, rt::time};
 use actix_web::rt::spawn;
+use actix_web::{rt::time, *};
 use actix_web_static_files::ResourceFiles;
 
+use lazy_static::{__Deref, lazy_static};
 use log::info;
 use serde_derive::{Deserialize, Serialize};
-use lazy_static::{lazy_static, __Deref};
 use tokio::sync::Mutex;
 
 mod lists;
@@ -26,7 +33,7 @@ pub struct MemDatabase {
 impl MemDatabase {
     pub fn new() -> Self {
         MemDatabase {
-            lists: GroceryLists::new()
+            lists: GroceryLists::new(),
         }
     }
 }
@@ -71,7 +78,7 @@ pub fn load_database() -> Result<MemDatabase, Error> {
 pub async fn save_database() -> Result<(), Error> {
     let mut file = OpenOptions::new().write(true).create(true).open(DB_NAME)?;
     let data = MEMORY_DATABASE.lock().await;
-    
+
     // Get data struct from mutex guard
     let data = data.deref();
 
@@ -92,8 +99,23 @@ async fn async_main() -> std::io::Result<()> {
 
     info!("Database(s) loaded!");
 
+    #[cfg(not(debug_assertions))]
+    let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
+    #[cfg(not(debug_assertions))]
+    builder
+        .set_private_key_file(
+            "/etc/letsencrypt/live/grocerylist.works/privkey.pem",
+            SslFiletype::PEM,
+        )
+        .unwrap();
+    #[cfg(not(debug_assertions))]
+    builder
+        .set_certificate_chain_file("/etc/letsencrypt/live/grocerlist.works/fullchain.pem")
+        .unwrap();
+        
+    #[cfg(debug_assertions)]
     // Create builder without ssl
-    HttpServer::new(move || {
+    return HttpServer::new(move || {
         let cors = Cors::default()
             .allow_any_origin()
             .allow_any_header()
@@ -112,11 +134,37 @@ async fn async_main() -> std::io::Result<()> {
             .service(update_list)
             .service(create_item)
             .service(ResourceFiles::new("/", generate()))
-
     })
     .bind(ADDRESS)?
     .run()
-    .await
+    .await;
+
+    #[cfg(not(debug_assertions))]
+    // Create builder with ssl
+    return HttpServer::new(move || {
+        let cors = Cors::default()
+            .allow_any_origin()
+            .allow_any_header()
+            .allow_any_method()
+            .send_wildcard()
+            .max_age(3600);
+
+        App::new()
+            .wrap(actix_web::middleware::Logger::default())
+            .wrap(actix_web::middleware::Compress::default())
+            .wrap(cors)
+            .service(create_new_list)
+            .service(get_list_by_share_code)
+            .service(get_list)
+            .service(get_list_last_updated)
+            .service(update_list)
+            .service(create_item)
+            .service(ResourceFiles::new("/", generate()))
+    })
+    .bind_openssl(ADDRESS, builder)?
+    .run()
+    .await;
+
 }
 fn main() {
     std::env::set_var("RUST_LOG", "info, actix_web=trace");
