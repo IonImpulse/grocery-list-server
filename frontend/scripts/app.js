@@ -1,6 +1,6 @@
 async function start() {
     console.log('Starting app');
-    
+
     loadState();
 
     if (state.list_object !== null) {
@@ -42,19 +42,20 @@ function loadState() {
 
 function saveState() {
     console.log('Saving state');
-    state.list_object.time_updated = new Date().getTime();
+    state.list_object.last_updated = new Date().getTime();
     localStorage.setItem('state', JSON.stringify(state));
+    processChange();
 }
 
 async function sync_state() {
     console.log('Syncing state');
-    const server_response = await fetch(API_URL + '/lists/' + state.list_object.list_uuid);
+    const server_response = await fetch(API_URL + '/list/' + state.list_object.uuid);
 
     if (server_response.status === 200) {
         console.log('Successfully synced state from server');
         const list_object = await server_response.json();
 
-        if (state.list_object.list_time_updated > list_object.list_object.time_updated) {
+        if (state.list_object.last_updated >= list_object.last_updated) {
             console.log('Local state is newer than server state, pushing to server');
             await push_state();
         } else {
@@ -66,7 +67,7 @@ async function sync_state() {
 
 async function push_state() {
     console.log('Pushing state to server');
-    const server_response = fetch(API_URL + '/lists/' + state.list_object.list_uuid, {
+    const server_response = fetch(API_URL + '/list/update/' + state.list_object.uuid, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -81,7 +82,7 @@ async function push_state() {
 
 async function loadShareCode() {
     console.log('Loading share code');
-    const server_response = await fetch(API_URL + '/list/share_code' + document.getElementById('load-share-code').value.trim());
+    const server_response = await fetch(API_URL + '/list/share_code/' + document.getElementById('load-share-code').value.trim());
 
     if (server_response.status === 200) {
         console.log('Successfully loaded share code');
@@ -90,6 +91,10 @@ async function loadShareCode() {
         state.list_object = list_object;
 
         saveState();
+
+        setDisplay('list');
+
+        renderList();
     }
 }
 
@@ -126,10 +131,12 @@ function renderList() {
 
     const list_container = document.getElementById('list-items');
 
+    let header = generateListHeader();
+
     let list_els = [];
 
     for (let list_item of state.list_object.items) {
-        list_html.append(createListItem(list_item));
+        list_els.push(createListItem(list_item));
     }
 
     let new_button = generateNewListItemButton();
@@ -138,6 +145,8 @@ function renderList() {
         list_container.removeChild(list_container.firstChild);
     }
 
+    list_container.appendChild(header);
+
     for (let list_el of list_els) {
         list_container.appendChild(list_el);
     }
@@ -145,6 +154,29 @@ function renderList() {
     list_container.appendChild(new_button);
 
     console.timeEnd('renderList');
+}
+
+function generateListHeader() {
+    let header = document.createElement('div');
+    header.classList.add('list-item');
+    header.classList.add('list-header');
+
+    header.innerHTML = `
+        <div class="list-item-checked">
+            <span>Checked</span>
+        </div>
+        <div class="list-item-name">
+            <span>Name</span>
+        </div>
+        <div class="list-item-quantity">
+            <span>Quantity</span>
+        </div>
+        <div class="list-item-delete">
+            <span>Delete</span>
+        </div>
+    `;
+
+    return header;        
 }
 
 
@@ -160,7 +192,7 @@ function createListItem(list_item) {
         list_item.checked = check_box.checked;
         saveState();
     });
-    
+
     let name_input = document.createElement('input');
     name_input.type = 'text';
     name_input.value = list_item.name;
@@ -168,22 +200,15 @@ function createListItem(list_item) {
         list_item.name = name_input.value;
         saveState();
     });
-    
+
     let quantity_input = document.createElement('input');
-    quantity_input.type = 'number';
+    quantity_input.type = 'text';
     quantity_input.value = list_item.quantity;
     quantity_input.addEventListener('change', () => {
         list_item.quantity = quantity_input.value;
         saveState();
     });
-    
-    let quantity_unit_input = document.createElement('input');
-    quantity_unit_input.type = 'text';
-    quantity_unit_input.value = list_item.quantity_unit;
-    quantity_unit_input.addEventListener('change', () => {
-        list_item.quantity_unit = quantity_unit_input.value;
-        saveState();
-    });
+
 
     let delete_button = document.createElement('button');
     delete_button.innerText = 'X';
@@ -194,7 +219,6 @@ function createListItem(list_item) {
     item.appendChild(check_box);
     item.appendChild(name_input);
     item.appendChild(quantity_input);
-    item.appendChild(quantity_unit_input);
     item.appendChild(delete_button);
 
     return item;
@@ -215,11 +239,8 @@ async function createNewListItem() {
 
     let new_item = await fetch(API_URL + '/list/item/create/' + state.list_object.uuid, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            }
-        });
-    
+    });
+
     if (new_item.status === 200) {
         console.log('Successfully created new list item');
         const list_item = await new_item.json();
@@ -238,6 +259,16 @@ async function createNewListItem() {
 
     }
 }
+
+function debounce(func, timeout = 300) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+}
+
+const processChange = debounce(() => sync_state());
 
 
 /*

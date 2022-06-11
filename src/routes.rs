@@ -65,6 +65,8 @@ pub async fn update_list(list_uuid: web::Path<String>, list: web::Json<GroceryLi
 
     lock.lists.update_list(list.into_inner());
 
+    drop(lock);
+
     save_database().await?;
 
     Ok(HttpResponse::Ok().finish())
@@ -87,6 +89,8 @@ pub async fn create_item(list_uuid: web::Path<String>) -> Result<HttpResponse, E
     list.add_set_item(item.clone());
 
     lock.lists.update_list(list);
+
+    drop(lock);
 
     save_database().await?;
 

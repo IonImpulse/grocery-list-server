@@ -125,8 +125,7 @@ impl GroceryList {
 pub struct GroceryListItem {
     uuid: String,
     name: String,
-    quantity: Option<u64>,
-    quantity_unit: Option<String>,
+    quantity: String,
     crossed_off: bool,
 }
 
@@ -135,8 +134,7 @@ impl GroceryListItem {
         GroceryListItem {
             uuid: Uuid::new_v4().to_string(),
             name: "".to_string(),
-            quantity: None,
-            quantity_unit: None,
+            quantity: "".to_string(),
             crossed_off: false,
         }
     }

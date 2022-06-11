@@ -108,7 +108,9 @@ async fn async_main() -> std::io::Result<()> {
             .service(create_new_list)
             .service(get_list_by_share_code)
             .service(get_list)
+            .service(get_list_last_updated)
             .service(update_list)
+            .service(create_item)
             .service(ResourceFiles::new("/", generate()))
 
     })
