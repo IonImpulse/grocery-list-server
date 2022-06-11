@@ -1,0 +1,55 @@
+{
+  "lists": {
+    "lists": [
+      {
+        "uuid": "475a29f9-052e-4c8f-81ea-be48a6b699e1",
+        "share_code": "9239AR2",
+        "name": "fdsa",
+        "items": [],
+        "last_updated": 0
+      },
+      {
+        "uuid": "552fa9c9-bf9b-4993-820b-4213b66eec76",
+        "share_code": "44Q6HG2",
+        "name": "fdsa",
+        "items": [],
+        "last_updated": 0
+      },
+      {
+        "uuid": "946d1f60-d54f-42c4-a3ff-68352087a58f",
+        "share_code": "T4G322T",
+        "name": "tesat1",
+        "items": [],
+        "last_updated": 0
+      },
+      {
+        "uuid": "be6d0892-3b35-43e2-8cee-622ff2992494",
+        "share_code": "GX4HEGP",
+        "name": "test",
+        "items": [],
+        "last_updated": 0
+      },
+      {
+        "uuid": "4dbe6fdf-f67b-499d-8f38-f5539ff1f9cc",
+        "share_code": "333T72T",
+        "name": "test",
+        "items": [],
+        "last_updated": 0
+      },
+      {
+        "uuid": "78b0c1bc-31e9-441e-a9ad-00a6d36ee3af",
+        "share_code": "4366DX2",
+        "name": "asdf",
+        "items": [],
+        "last_updated": 0
+      },
+      {
+        "uuid": "f8074507-a644-417e-92db-3d081eb7fbcf",
+        "share_code": "G46PDEF",
+        "name": "test",
+        "items": [],
+        "last_updated": 0
+      }
+    ]
+  }
+}

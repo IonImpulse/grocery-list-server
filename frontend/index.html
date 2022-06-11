@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>GroceryList.works</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="scripts/prelude.js"></script>
+
+        <link rel="stylesheet" href="css/main.css">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <div id="create-load-screen" class="hidden">
+            <h1>GroceryList.works</h1>
+            <h2>A grocery list webapp that just works</h2>
+            
+            <input id="load-share-code" class="loading-screen" type="text" placeholder="Input share code">
+            <button id="load-share-code-button" class="big loading-screen" onclick="loadShareCode()">Load</button>
+
+            <p>Or</p>
+            
+            <input id="create-list-name" class="loading-screen" type="text" placeholder="Input list name">
+            <button id="create-new-list" class="big loading-screen" onclick="createNewList()">Create New List</button>
+        </div>
+
+        <div id="list-screen" class="hidden">
+            <h1 id="list-name"></h1>
+            <h2 id="share-code"></h2>
+            
+            <div id="list-items">
+                
+            </div>
+        </div>
+
+    </body>
+
+    <script src="scripts/app.js"></script>
+</html>

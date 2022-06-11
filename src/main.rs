@@ -1,7 +1,14 @@
-use std::{fs::OpenOptions, io::Read, sync::Arc};
+use std::{fs::OpenOptions, io::{Read, Write}, sync::Arc, time::{Duration}, thread, process::exit};
 
+use actix_cors::*;
+use actix_web::{*, rt::time};
+use actix_web::rt::spawn;
+use actix_web_static_files::ResourceFiles;
+
+use log::info;
 use serde_derive::{Deserialize, Serialize};
-use lazy_static::lazy_static;
+use lazy_static::{lazy_static, __Deref};
+use tokio::sync::Mutex;
 
 mod lists;
 mod routes;
@@ -9,9 +16,19 @@ mod routes;
 use lists::*;
 use routes::*;
 
+include!(concat!(env!("OUT_DIR"), "/generated.rs"));
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct MemDatabase {
     lists: GroceryLists,
+}
 
+impl MemDatabase {
+    pub fn new() -> Self {
+        MemDatabase {
+            lists: GroceryLists::new()
+        }
+    }
 }
 
 // Debug vs release address
@@ -40,13 +57,13 @@ pub fn load_database() -> Result<MemDatabase, Error> {
     let file = OpenOptions::new().read(true).open(DB_NAME);
 
     if file.is_err() {
-        return Ok(MemDatabase::default());
+        return Ok(MemDatabase::new());
     } else {
         let mut file = file.unwrap();
 
         let mut data = String::new();
         file.read_to_string(&mut data)?;
-        let data: Data = from_slice_lenient(&data.as_bytes()).unwrap();
+        let data: MemDatabase = from_slice_lenient(&data.as_bytes()).unwrap();
         Ok(data)
     }
 }
@@ -75,15 +92,6 @@ async fn async_main() -> std::io::Result<()> {
 
     info!("Database(s) loaded!");
 
-    spawn(async move {
-        let mut interval = time::interval(Duration::from_secs(60));
-        loop {
-            interval.tick().await;
-            update_loop().await;
-            save_database().await;
-        }
-    });
-
     // Create builder without ssl
     HttpServer::new(move || {
         let cors = Cors::default()
@@ -97,6 +105,11 @@ async fn async_main() -> std::io::Result<()> {
             .wrap(actix_web::middleware::Logger::default())
             .wrap(actix_web::middleware::Compress::default())
             .wrap(cors)
+            .service(create_new_list)
+            .service(get_list_by_share_code)
+            .service(get_list)
+            .service(update_list)
+            .service(ResourceFiles::new("/", generate()))
 
     })
     .bind(ADDRESS)?
