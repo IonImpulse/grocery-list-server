@@ -43,6 +43,8 @@ impl MemDatabase {
 const ADDRESS: &str = "127.0.0.1:8080";
 #[cfg(not(debug_assertions))]
 const ADDRESS: &str = "0.0.0.0:8080";
+#[cfg(not(debug_assertions))]
+use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 
 lazy_static! {
     pub static ref MEMORY_DATABASE: Arc<Mutex<MemDatabase>> =
