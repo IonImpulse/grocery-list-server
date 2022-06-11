@@ -1,0 +1,26 @@
+{
+  "lists": {
+    "lists": [
+      {
+        "uuid": "cc1da79b-5624-4f4d-81c0-cd1f79e79aff",
+        "share_code": "3E7X9W7",
+        "name": "test",
+        "items": [
+          {
+            "uuid": "b4b4ae94-df01-4bc4-be74-5207172c1970",
+            "name": "12121",
+            "quantity": "1 bunch",
+            "crossed_off": false
+          },
+          {
+            "uuid": "7abda956-302e-4f9a-96a1-b9aed1e47044",
+            "name": "",
+            "quantity": "",
+            "crossed_off": false
+          }
+        ],
+        "last_updated": 1654984051776
+      }
+    ]
+  }
+}

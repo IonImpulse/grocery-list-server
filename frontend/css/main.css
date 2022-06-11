@@ -70,9 +70,8 @@ button:hover {
 
 input {
     background-color: var(--theme-color-3);
-    font-size: 16px;
     color: var(--text-main);
-    padding: 12px;
+    padding: 6px;
     border: unset;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
@@ -102,15 +101,16 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    width: 80vw;
-    max-width: 300px;
+    gap: 10px;
+    width: 90vw;
+    max-width: 400px;
 }
 
 .list-item {
+    font-size: 12px;
     display: grid;
     grid-template-columns: 1fr 10fr 4fr 1fr;
-    grid-gap: 30px;
+    grid-gap: 20px;
 }
 
 .list-item * {
@@ -118,12 +118,12 @@ h2 {
 }
 
 input[type="checkbox"] {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
 }
 
 button.delete {
-    width: 40px;
+    width: 30px;
     height: auto;
 }
 
