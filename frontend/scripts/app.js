@@ -69,7 +69,7 @@ async function sync_state() {
 setInterval(() => {
     sync_state();
 }
-, 5000);
+, 1000);
 
 async function push_state() {
     console.log('Pushing state to server');
@@ -88,7 +88,7 @@ async function push_state() {
 
 async function loadShareCode() {
     console.log('Loading share code');
-    const server_response = await fetch(API_URL + '/list/share_code/' + document.getElementById('load-share-code').value.trim());
+    const server_response = await fetch(API_URL + '/list/share_code/' + document.getElementById('load-share-code').value.trim().toUpperCase());
 
     if (server_response.status === 200) {
         console.log('Successfully loaded share code');
