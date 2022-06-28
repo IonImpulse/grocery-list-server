@@ -219,6 +219,7 @@ function createListItem(list_item) {
     let name_input = document.createElement('input');
     name_input.type = 'text';
     name_input.value = list_item.name;
+    name_input.classList.add("item-name");
 
     if (list_item.crossed_off) {
         name_input.classList.add("strikethrough");
@@ -228,6 +229,15 @@ function createListItem(list_item) {
         list_item.name = name_input.value;
         saveState();
     });
+    name_input.addEventListener('keydown', (e) => {
+        // If enter is pressed WHILE it has focus,
+        // create a new item
+        if (e.keyCode === 13) {
+            createNewListItem();
+        }
+    });
+    
+
     check_box.addEventListener('change', () => {
         list_item.crossed_off = check_box.checked;
         name_input.classList.toggle("strikethrough");
@@ -242,6 +252,12 @@ function createListItem(list_item) {
         saveState();
     });
 
+    quantity_input.addEventListener('keydown', (e) => {
+        // If enter is pressed or if tab is pressed
+        if (e.keyCode === 13 || e.keyCode === 9) {
+            createNewListItem();
+        }
+    });
 
     let delete_button = document.createElement('button');
     delete_button.innerText = 'X';
@@ -288,9 +304,8 @@ async function createNewListItem() {
 
         document.getElementById(`list-item-${list_item.uuid}`).scrollIntoView();
 
-        document.getElementById(`list-item-${list_item.uuid}`).querySelector('input').focus();
+        document.getElementById(`list-item-${list_item.uuid}`).getElementsByClassName('item-name')[0].focus();
 
-        document.getElementById(`list-item-${list_item.uuid}`).querySelector('input').select();
 
     }
 }
