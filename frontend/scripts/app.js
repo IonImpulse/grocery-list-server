@@ -157,11 +157,14 @@ function renderList() {
 
     let switch_button = generateSwitchButton();
 
+    let delete_all_button = generateDeleteAllCheckedButton();
     while (list_container.firstChild) {
         list_container.removeChild(list_container.firstChild);
     }
 
     list_container.appendChild(header);
+
+    list_container.appendChild(delete_all_button);
 
     for (let list_el of list_els) {
         list_container.appendChild(list_el);
@@ -171,6 +174,19 @@ function renderList() {
     list_container.appendChild(switch_button);
 
     console.timeEnd('renderList');
+}
+
+function deleteAllChecked() {
+    console.log('Deleting all checked');
+    let new_items = [];
+    for (let list_item of state.list_object.items) {
+        if (!list_item.crossed_off) {
+            new_items.push(list_item);
+        }
+    }
+    state.list_object.items = new_items;
+    saveState();
+    renderList();
 }
 
 function generateListHeader() {
@@ -196,6 +212,17 @@ function generateSwitchButton() {
     button.id = "switch-button";
     button.addEventListener('click', () => {
         clearData()
+    });
+
+    return button;
+}
+
+function generateDeleteAllCheckedButton() {
+    let button = document.createElement('button');
+    button.innerText = 'Delete All Checked';
+    button.id = "delete-all-checked-button";
+    button.addEventListener('click', () => {
+        deleteAllChecked();
     });
 
     return button;
@@ -237,7 +264,6 @@ function createListItem(list_item) {
         }
     });
     
-
     check_box.addEventListener('change', () => {
         list_item.crossed_off = check_box.checked;
         name_input.classList.toggle("strikethrough");
