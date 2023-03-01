@@ -2,15 +2,35 @@ async function start() {
     console.log('Starting app');
 
     loadState();
+    createColorButtons();
 
-    if (state.list_object !== null) {
+    if (state.list_object !== null && state.list_object !== undefined) {
         await sync_state();
 
         renderList();
 
         setDisplay('list');
     } else {
+        state.list_object = {};
         setDisplay('load');
+    }
+}
+
+function createColorButtons() {
+    console.log('Creating color buttons');
+
+    const el = document.getElementById('color-select');
+
+    for (let i = 0; i < base_colors.length; i++) {
+        const button = document.createElement('button');
+        button.classList.add('color-button');
+        button.style.backgroundColor = base_colors[i];
+        button.addEventListener('click', () => {
+            localStorage.setItem('theme-color', i);
+            setThemeColors();
+        });
+
+        el.appendChild(button);
     }
 }
 
@@ -42,13 +62,17 @@ function loadState() {
 
 function saveState() {
     console.log('Saving state');
-    state.list_object.last_updated = new Date().getTime();
     localStorage.setItem('state', JSON.stringify(state));
     processChange();
 }
 
 async function sync_state() {
     console.log('Syncing state');
+
+    if (state.list_object.uuid === undefined) {
+        return;
+    }
+
     const server_response = await fetch(API_URL + '/list/' + state.list_object.uuid);
 
     if (server_response.status === 200) {
@@ -124,6 +148,8 @@ async function createNewList() {
 
         setDisplay('list');
 
+        createNewListItem();
+
         renderList();
     }
 }
@@ -185,6 +211,8 @@ function deleteAllChecked() {
         }
     }
     state.list_object.items = new_items;
+    state.list_object.last_updated = new Date().getTime();
+
     saveState();
     renderList();
 }
@@ -254,6 +282,7 @@ function createListItem(list_item) {
 
     name_input.addEventListener('change', () => {
         list_item.name = name_input.value;
+        state.list_object.last_updated = new Date().getTime();
         saveState();
     });
     name_input.addEventListener('keydown', (e) => {
@@ -267,6 +296,8 @@ function createListItem(list_item) {
     check_box.addEventListener('change', () => {
         list_item.crossed_off = check_box.checked;
         name_input.classList.toggle("strikethrough");
+        state.list_object.last_updated = new Date().getTime();
+
         saveState();
     });
 
@@ -275,14 +306,9 @@ function createListItem(list_item) {
     quantity_input.value = list_item.quantity;
     quantity_input.addEventListener('change', () => {
         list_item.quantity = quantity_input.value;
-        saveState();
-    });
+        state.list_object.last_updated = new Date().getTime();
 
-    quantity_input.addEventListener('keydown', (e) => {
-        // If enter is pressed or if tab is pressed
-        if (e.keyCode === 13 || e.keyCode === 9) {
-            createNewListItem();
-        }
+        saveState();
     });
 
     let delete_button = document.createElement('button');
@@ -290,6 +316,13 @@ function createListItem(list_item) {
     delete_button.classList.add("delete");
     delete_button.addEventListener('click', () => {
         deleteListItem(list_item.uuid);
+    });
+
+    delete_button.addEventListener('keydown', (e) => {
+        // If enter is pressed or if tab is pressed
+        if (e.keyCode === 13 || e.keyCode === 9) {
+            createNewListItem();
+        }
     });
 
     item.appendChild(check_box);
@@ -323,6 +356,7 @@ async function createNewListItem() {
         const list_item = await new_item.json();
 
         state.list_object.items.push(list_item);
+        state.list_object.last_updated = new Date().getTime();
 
         saveState();
 
@@ -340,6 +374,7 @@ function deleteListItem(uuid) {
     console.log('Deleting list item');
 
     state.list_object.items = state.list_object.items.filter(item => item.uuid !== uuid);
+    state.list_object.last_updated = new Date().getTime();
 
     saveState();
 

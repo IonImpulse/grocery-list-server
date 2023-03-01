@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,6 +11,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <script src="scripts/chroma.min.js"></script>
         <script src="scripts/prelude.js"></script>
 
         <link rel="stylesheet" href="css/main.css">
@@ -23,7 +24,7 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <div id="create-load-screen" class="hidden">
-            <h1>GroceryList.works</h1>
+            <h1 id="title">GroceryList.works</h1>
             <h2>A grocery list webapp that just works</h2>
             
             <input id="load-share-code" class="loading-screen" type="text" placeholder="Input share code">
@@ -33,17 +34,23 @@
             
             <input id="create-list-name" class="loading-screen" type="text" placeholder="Input list name">
             <button id="create-new-list" class="big loading-screen" onclick="createNewList()">Create New List</button>
+
+            <div id="color-select">
+            </div>
         </div>
 
         <div id="list-screen" class="hidden">
             <input id="list-name">
-            <h2 id="share-code"></h2>
+            <h2 id="share-code" aria-label="Share Code (filled on load)"></h2>
             
             <div id="list-items">
 
             </div>
         </div>
 
+        <div id="status" class="">
+            <p id="status-text">Saved!</p>
+        </div>
     </body>
 
     <script src="scripts/app.js"></script>
