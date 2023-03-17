@@ -19,11 +19,12 @@ var state = {
 }
 
 const base_colors = [
-    "#1D1D1D",
-    "#C2681F",
-    "#256BD4",
-    "#D43F25",
-    "#147936",
+    "#0E0E0E",
+    "#6C009B",
+    "#9B0044",
+    "#A82F19",
+    "#1955AF",
+    "#0D5A26",
 ];
 
 function setThemeColors() {
@@ -37,7 +38,7 @@ function setThemeColors() {
 
     for (let i = 1; i < 5; i++) {
         // Increase color luminosity by 20% for each step
-        new_color = chroma(new_color).brighten(0.3).hex();
+        new_color = chroma(new_color).brighten(0.4).hex();
 
         document.documentElement.style.setProperty('--theme-color-' + i, new_color);
     }

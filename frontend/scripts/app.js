@@ -23,8 +23,9 @@ function createColorButtons() {
 
     for (let i = 0; i < base_colors.length; i++) {
         const button = document.createElement('button');
+        button.setAttribute("aria-label", `Choose Color #${base_colors[i]}`)
         button.classList.add('color-button');
-        button.style.backgroundColor = base_colors[i];
+        button.style.backgroundColor = chroma(base_colors[i]).darken(.2).hex();
         button.addEventListener('click', () => {
             localStorage.setItem('theme-color', i);
             setThemeColors();
@@ -112,7 +113,8 @@ async function push_state() {
 
 async function loadShareCode() {
     console.log('Loading share code');
-    const server_response = await fetch(API_URL + '/list/share_code/' + document.getElementById('load-share-code').value.trim().toUpperCase());
+    const share_code = document.getElementById('load-share-code').value.trim().toUpperCase();
+    const server_response = await fetch(API_URL + '/list/share_code/' + share_code);
 
     if (server_response.status === 200) {
         console.log('Successfully loaded share code');
@@ -120,11 +122,32 @@ async function loadShareCode() {
 
         state.list_object = list_object;
 
+        // Add to history
+        let to_remove = null;
+
+        for (let i = 0; i <= state.prev_lists.length; i++) {
+            if (state.prev_lists[i].code == share_code) {
+                to_remove = i;
+                break;
+            }
+        }
+
+
+        state.prev_lists.push(share_code);
+
         saveState();
 
         setDisplay('list');
 
         renderList();
+    } else {
+        if (!document.getElementById("load-share-code").classList.contains("error")) {
+            document.getElementById("load-share-code").classList.add("error");
+
+            setTimeout(() => {
+                document.getElementById("load-share-code").classList.remove("error");
+            }, 500);
+        }
     }
 }
 
@@ -167,7 +190,7 @@ function renderList() {
     });
 
 
-    document.getElementById("share-code").innerHTML = `${state.list_object.share_code}`;
+    document.getElementById("share-code").innerHTML = `Code: ${state.list_object.share_code}`;
 
     const list_container = document.getElementById('list-items');
 
@@ -268,10 +291,12 @@ function createListItem(list_item) {
     item.id = `list-item-${list_item.uuid}`;
 
     let check_box = document.createElement('input');
+    check_box.setAttribute("aria-label", "Checked");
     check_box.type = 'checkbox';
     check_box.checked = list_item.crossed_off;
 
     let name_input = document.createElement('input');
+    name_input.setAttribute("aria-label", "Name");
     name_input.type = 'text';
     name_input.value = list_item.name;
     name_input.classList.add("item-name");
@@ -302,6 +327,7 @@ function createListItem(list_item) {
     });
 
     let quantity_input = document.createElement('input');
+    quantity_input.setAttribute("aria-label", "Quantity");
     quantity_input.type = 'text';
     quantity_input.value = list_item.quantity;
     quantity_input.addEventListener('change', () => {
@@ -310,19 +336,20 @@ function createListItem(list_item) {
 
         saveState();
     });
+    quantity_input.addEventListener('keydown', (e) => {
+        // If enter is pressed WHILE it has focus,
+        // create a new item
+        if (e.keyCode === 13) {
+            createNewListItem();
+        }
+    });
 
     let delete_button = document.createElement('button');
+    delete_button.setAttribute("aria-label", "Delete");
     delete_button.innerText = 'X';
     delete_button.classList.add("delete");
     delete_button.addEventListener('click', () => {
         deleteListItem(list_item.uuid);
-    });
-
-    delete_button.addEventListener('keydown', (e) => {
-        // If enter is pressed or if tab is pressed
-        if (e.keyCode === 13 || e.keyCode === 9) {
-            createNewListItem();
-        }
     });
 
     item.appendChild(check_box);

@@ -26,22 +26,22 @@
         <div id="create-load-screen" class="hidden">
             <h1 id="title">GroceryList.works</h1>
             <h2>A grocery list webapp that just works</h2>
-            
-            <input id="load-share-code" class="loading-screen" type="text" placeholder="Input share code">
-            <button id="load-share-code-button" class="big loading-screen" onclick="loadShareCode()">Load</button>
+
+            <input id="create-list-name" class="loading-screen" type="text" placeholder="List Name" aria-label="New List Name">
+            <button id="create-new-list" class="big loading-screen" onclick="createNewList()">Create New List</button>
 
             <p>Or</p>
-            
-            <input id="create-list-name" class="loading-screen" type="text" placeholder="Input list name">
-            <button id="create-new-list" class="big loading-screen" onclick="createNewList()">Create New List</button>
+
+            <input id="load-share-code" class="loading-screen" type="text" placeholder="Share Code" aria-label="Share Code">
+            <button id="load-share-code-button" class="big loading-screen" onclick="loadShareCode()">Load Existing List</button>
 
             <div id="color-select">
             </div>
         </div>
 
         <div id="list-screen" class="hidden">
-            <input id="list-name">
-            <h2 id="share-code" aria-label="Share Code (filled on load)"></h2>
+            <input id="list-name" aria-label="List Name">
+            <h2 id="share-code" aria-label="Share Code (filled on load)">...</h2>
             
             <div id="list-items">
 

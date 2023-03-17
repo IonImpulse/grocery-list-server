@@ -1,5 +1,5 @@
 :root {
-    --main-font: "Inter";
+    --main-font: Inter, Sans-Serif;
     /*
     --theme-color-1: #3b7088;
     --theme-color-2: #315b6e;
@@ -237,13 +237,37 @@ button.delete {
     display: flex;
     flex-direction: row;
     gap: 10px;
-    width: 100%;
     justify-content: center;
     align-items: center;
+    background-color: var(--theme-color-2);
+    border-radius: 20px;
+    padding: 15px 20px;
 }
 
 .color-button {
     height: 3vh;
     width: 3vh;
     padding: unset;
+}
+
+.error {
+    animation: error .5s cubic-bezier(.26,.8,.41,.92);
+}
+
+@keyframes error {
+    0% {
+        transform: translateX(0);
+    }
+    15% {
+        transform: translateX(10px);
+    }
+    45% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+    100% {
+        transform: translateX(0);
+    }
 }

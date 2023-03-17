@@ -8,8 +8,7 @@ use std::{
 };
 
 use actix_cors::*;
-use actix_web::rt::spawn;
-use actix_web::{rt::time, *};
+use actix_web::*;
 use actix_web_static_files::ResourceFiles;
 
 use lazy_static::{__Deref, lazy_static};

@@ -1,7 +1,5 @@
 use crate::*;
-use ::serde::{Deserialize, Serialize};
-use actix_web::{error::*, *};
-use openssl::stack::Stack;
+use actix_web::error::*;
 
 #[post("/api/v1/list/create/{name}")]
 pub async fn create_new_list(name: web::Path<String>) -> Result<HttpResponse, Error> {
