@@ -3,6 +3,7 @@ async function start() {
 
     loadState();
     createColorButtons();
+    renderHistory();
 
     if (state.list_object !== null && state.list_object !== undefined) {
         await sync_state();
@@ -13,6 +14,38 @@ async function start() {
     } else {
         state.list_object = {};
         setDisplay('load');
+    }
+}
+
+function renderHistory() {
+    console.log("Rendering history");
+    console.log(state);
+    const el = document.getElementById('list-history');
+
+    let divs = [];
+
+    // Get last 5 lists
+    let last_five = state.prev_lists.slice(state.prev_lists.length - 5);
+
+    last_five.reverse();
+
+    for (let i = 0; i < last_five.length; i++) {
+        const div = document.createElement('button');
+        div.classList.add('list-history-item');
+        div.innerHTML = `${last_five[i].share_code} - ${last_five[i].name}`;
+
+        div.addEventListener('click', () => {
+            document.getElementById('load-share-code').value = last_five[i].share_code;
+            loadShareCode();
+        });
+
+        divs.push(div);
+    }
+
+    el.innerHTML = '';
+
+    for (let i = 0; i < divs.length; i++) {
+        el.appendChild(divs[i]);
     }
 }
 
@@ -58,6 +91,7 @@ function loadState() {
     if (new_state) {
         console.log('Found state in local storage');
         state = JSON.parse(new_state);
+        console.log(new_state);
     }
 }
 
@@ -70,7 +104,11 @@ function saveState() {
 async function sync_state() {
     console.log('Syncing state');
 
-    if (state.list_object.uuid === undefined) {
+    if (state.list_object === null) {
+        return;
+    }
+
+    if (state.list_object.uuid == undefined) {
         return;
     }
 
@@ -122,23 +160,21 @@ async function loadShareCode() {
 
         state.list_object = list_object;
 
-        // Add to history
-        let to_remove = null;
+        // Remove if in history, then add to top
+        state.prev_lists = state.prev_lists.filter((prev) => prev.share_code !== share_code);
 
-        for (let i = 0; i <= state.prev_lists.length; i++) {
-            if (state.prev_lists[i].code == share_code) {
-                to_remove = i;
-                break;
-            }
-        }
+        state.prev_lists.push({
+            name: state.list_object.name,
+            share_code: state.list_object.share_code,
+        });
 
-
-        state.prev_lists.push(share_code);
+        console.log(state.prev_lists);
 
         saveState();
 
         setDisplay('list');
 
+        renderHistory();
         renderList();
     } else {
         if (!document.getElementById("load-share-code").classList.contains("error")) {
@@ -167,13 +203,19 @@ async function createNewList() {
 
         state.list_object = list_object;
 
-        saveState();
+        state.prev_lists.push({
+            name: state.list_object.name,
+            share_code: state.list_object.share_code,
+        });
+
 
         setDisplay('list');
 
         createNewListItem();
-
+        renderHistory();
         renderList();
+
+        saveState();
     }
 }
 
@@ -186,6 +228,13 @@ function renderList() {
     list_name.value = state.list_object.name;
     list_name.addEventListener('change', () => {
         state.list_object.name = list_name.value;
+        // Go through history and update name
+        for (let prev of state.prev_lists) {
+            if (prev.share_code === state.list_object.share_code) {
+                prev.name = state.list_object.name;
+            }
+        }
+
         saveState();
     });
 
@@ -281,7 +330,6 @@ function generateDeleteAllCheckedButton() {
 
 function clearData() {
     state.list_object = null;
-    localStorage.removeItem('state');
     setDisplay('load'); 
 }
 
