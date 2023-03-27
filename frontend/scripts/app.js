@@ -12,7 +12,7 @@ async function start() {
 
         setDisplay('list');
     } else {
-        state.list_object = {};
+        state.list_object = null;
         setDisplay('load');
     }
 }
